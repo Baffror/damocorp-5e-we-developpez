@@ -5,4 +5,4 @@
 <h3>***** LICENCE *****</h3>
 
 Code : Free use and no copyright<br />
-Image : All image are under Copyright. You can't use without autorisation. Thanks.
+Image : All image are under Copyright. You can't use without permission. Thanks.

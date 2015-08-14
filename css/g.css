@@ -1,0 +1,362 @@
+/* ************************************************ RESET ***************************************/
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, figure, footer, header, hgroup, menu, nav, section, menu, time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+	background: transparent;
+}
+article, aside, figure, footer, header, hgroup, nav, section {
+	display: block;
+}
+nav ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after, q:before, q:after {
+	content: '';
+	content: none;
+}
+a {
+	margin: 0;
+	padding: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+	background: transparent;
+}
+ins {
+	background-color: #ff9;
+	color: #000;
+	text-decoration: none;
+}
+mark {
+	background-color: #ff9;
+	color: #000;
+	font-style: italic;
+	font-weight: bold;
+}
+del {
+	text-decoration: line-through;
+}
+abbr[title], dfn[title] {
+	border-bottom: 1px dotted #000;
+	cursor: help;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+hr {
+	display: block;
+	height: 1px;
+	border: 0;
+	border-top: 1px solid #ccc;
+	margin: 1em 0;
+	padding: 0;
+}
+input, select {
+	vertical-align: middle;
+}
+/**************************************  FIN RESET ***********************************************/
+body{
+	overflow: hidden;
+	background-image: url('../img/fond_game.jpg');
+}
+div.affUp{
+	position: absolute;
+	z-index: 1000;
+	top:0px;
+	left:0px;
+	width: 100%;
+	height: 100%;
+}
+div.ress{
+	position: absolute;
+	z-index: 1000;
+	top:0px;
+	left:50%;
+	margin-left: -160px;
+	width: 320px;
+	background-image: url('../img/stream.png');
+	border:1px solid white;
+	border-top: none;
+}
+div.ressA,div.ressB,div.ressC{
+	width: 100px;
+	text-align: center;
+	display: inline-block;
+	overflow: hidden;
+	vertical-align: top;
+}
+div.ressA span,div.ressB span,div.ressC span{
+	background-color: black;
+	color: #C0C0C0;
+	display: block;
+	font-weight: bold;
+}
+div.ressA,div.ressB{
+	margin-right: 10px;
+}
+div.ressAImg,div.ressBImg,div.ressCImg{
+	width: 50px;
+	height: 50px;
+	background-image: url('../img/sprite_game.png');
+	background-repeat: no-repeat;
+	margin: auto;
+}
+div.ressAImg{
+	background-position: 0px -150px;
+}
+div.ressBImg{
+	background-position: -50px -150px;
+}
+div.ressCImg{
+	background-position: -100px -150px;
+}
+#showHide{
+	width: 48px;
+	height: 16px;
+	margin: auto;
+	background-image: url('../img/sprite_icone.png');
+	background-position: 0px 0px;
+	background-repeat: repeat-x;
+	cursor: pointer;
+}
+#showHideUp{
+	background-position: 0px -16px;
+}
+div.menu{
+	position: absolute;
+	z-index: 1000;
+	top:0px;
+	left:0px;
+	width: 320px;
+	height: 50px;
+	background-image: url('../img/stream.png');
+	border:1px solid white;
+	border-bottom: none;
+}
+div.menu li{
+	display: inline-block;
+	vertical-align: top;
+	background-image: url('../img/sprite_game.png');
+	background-repeat:no-repeat;
+	width: 50px;
+	height: 50px;
+	cursor: pointer;
+}
+#boutonFlotte{background-position: 0px -250px;}
+#boutonFlotte:hover{background-position: 0px -300px;}
+#boutonStation{background-position: -50px -250px;}
+#boutonStation:hover{background-position: -50px -300px;}
+#boutonSonde{background-position: -100px -250px;}
+#boutonSonde:hover{background-position: -100px -300px;}
+.clear{
+	clear: both;
+}
+.center{
+	text-align: center;
+}
+/*********************************************** POPUP ****************************************/
+#fondPopup{
+	position: absolute;
+	z-index: 1200;
+	top:0px;
+	left:0px;
+	width: 100%;
+	height: 100%;
+	background-image: url('../img/stream.png');
+}
+#contentPopup{
+	position: relative;
+	margin: auto;
+}
+#fermerPopup{
+	position: absolute;
+	z-index: 2000;
+	top:0px;
+	left:0px;
+	margin: -16px 0px 0px 0px;
+	width: 32px;
+	height: 32px;
+	float: right;
+	cursor:pointer;
+	background-image: url('../img/sprite_icone32.png');
+}
+/*********************************************** FLOTTE / STATION ****************************************/
+#flotte,#station,#sonder{
+	width: 320px;
+	background-color:#000000;
+	margin: 10px auto 0px auto;
+	border:1px solid #00A800;
+	border-radius: 5px;
+	box-shadow: 0px 0px 12px #00A800;
+	padding:5px;
+	color: #D7D7D7;
+}
+div.affImgVx,div.affImgSt{
+	width: 50px;
+	height: 50px;
+	background-image: url('../img/sprite_game.png');
+	border-bottom:0px;
+	margin: 0px 25px 0px 25px;
+	cursor: pointer;
+}
+div.vx1{background-position: 0px -350px;}
+div.vx2{background-position: -50px -350px;}
+div.vx3{background-position: -100px -350px;}
+div.vx4{background-position: -150px -350px;}
+div.vx5{background-position: -200px -350px;}
+div.vx6{background-position: -250px -350px;}
+div.vx7{background-position: -300px -350px;}
+div.vx8{background-position: -350px -350px;}
+div.vx9{background-position: -400px -350px;}
+
+div.st1{background-position: 0px -400px;}
+div.st2{background-position: -50px -400px;}
+div.st3{background-position: -100px -400px;}
+div.st4{background-position: -150px -400px;}
+div.st5{background-position: -200px -400px;}
+div.st6{background-position: -250px -400px;}
+div.st7{background-position: -300px -400px;}
+div.st8{background-position: -350px -400px;}
+
+#flotte input[type="text"],#station input[type="text"],#sonder input[type="text"]{
+	width: 98px;
+	border-radius-left-bottom: 3px;
+	border-radius-right-bottom: 3px;
+	border:none;
+	margin-top: -3px;
+}
+input[type="submit"]{
+	-moz-box-shadow:inset 0px 1px 0px 0px #9acc85;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #9acc85;
+	box-shadow:inset 0px 1px 0px 0px #9acc85;
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #74ad5a), color-stop(1, #68a54b));
+	background:-moz-linear-gradient(top, #74ad5a 5%, #68a54b 100%);
+	background:-webkit-linear-gradient(top, #74ad5a 5%, #68a54b 100%);
+	background:-o-linear-gradient(top, #74ad5a 5%, #68a54b 100%);
+	background:-ms-linear-gradient(top, #74ad5a 5%, #68a54b 100%);
+	background:linear-gradient(to bottom, #74ad5a 5%, #68a54b 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#74ad5a', endColorstr='#68a54b',GradientType=0);
+	background-color:#74ad5a;
+	border:1px solid #3b6e22;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:arial;
+	font-size:13px;
+	font-weight:bold;
+	padding:6px 12px;
+	text-decoration:none;
+	margin:15px 0px;
+}
+input[type="submit"]:hover{
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #68a54b), color-stop(1, #74ad5a));
+	background:-moz-linear-gradient(top, #68a54b 5%, #74ad5a 100%);
+	background:-webkit-linear-gradient(top, #68a54b 5%, #74ad5a 100%);
+	background:-o-linear-gradient(top, #68a54b 5%, #74ad5a 100%);
+	background:-ms-linear-gradient(top, #68a54b 5%, #74ad5a 100%);
+	background:linear-gradient(to bottom, #68a54b 5%, #74ad5a 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#68a54b', endColorstr='#74ad5a',GradientType=0);
+	background-color:#68a54b;
+}
+input[type="submit"]:active{
+	position:relative;
+	top:1px;
+}
+#vx1,#vx2,#vx3,#vx4,#vx5,#vx6,#vx7,#vx8,#vx9,#st1,#st2,#st3,#st4,#st5,#st6,#st7,#st8{
+	float: left;
+	margin:10px 0px 0px 5px;
+	border:1px solid white;
+	background-image: url('../img/sprite_game.png');
+	background-position: 0px -450px;
+	background-repeat: no-repeat;
+	width: 98px;
+}
+div[class^=affvx],div[class^=affst]{
+	background-image: url('../img/sprite_game.png');
+	width: 100px;
+	height: 100px;
+	margin: 10px auto;
+}
+div.affvx1{background-position: -400px 0px;}
+div.affvx2{background-position: -400px -100px;}
+div.affvx3{background-position: -300px -150px;}
+div.affvx4{background-position: 0px -500px;}
+div.affvx5{background-position: -100px -500px;}
+div.affvx6{background-position: -200px -500px;}
+div.affvx7{background-position: -300px -500px;}
+div.affvx8{background-position: -400px -500px;}
+div.affvx9{background-position: -400px -200px;}
+
+div.affst1{background-position: 0px -600px;}
+div.affst2{background-position: -100px -600px;}
+div.affst3{background-position: -200px -600px;}
+div.affst4{background-position: -300px -600px;}
+div.affst5{background-position: -400px -600px;}
+div.affst6{background-position: 0px -700px;}
+div.affst7{background-position: -100px -700px;}
+div.affst8{background-position: -200px -700px;}
+
+div.qtFlotte,div.qtStation{
+	background-color: black;
+	color: #00A800;
+}
+#flotte h1,#station h1{
+	font-size: 1.3em;
+	color: #0080C0;
+	text-align: center;
+}
+#flotte h2,#station h2{
+	font-size: 1.1em;
+	color: #0FB1FF;
+	text-align: center;
+}
+#flotte p,#station p{
+	text-align: justify;
+}
+/********************************************* REPONSE *************************************************/
+div.reponseB, div.reponseG{
+	position: absolute;
+	text-align: center;
+	font-size: 16px;
+	font-weight: bold;
+	width: 100%;
+	padding:10px 0px 10px 0px;
+	background-color: white;
+	cursor: pointer;
+	z-index: 5000;
+}
+div.reponseG{
+	color: green;
+	box-shadow:inset 0px 0px 25px 1px green;
+}
+div.reponseB{
+	background-color: #FFBFBF;
+	box-shadow:inset 0px 0px 25px 1px red;
+}
+/********************************************* SONDER *************************************************/
+div.affImgVxSonde{
+	width: 50px;
+	height: 50px;
+	background-image: url('../img/sprite_game.png');
+	border-bottom:0px;
+	margin: 0px auto;
+}
+#sonder input[type="text"]{
+	text-align: center;
+}
+/********************************************* DIVERS *************************************************/
+.vert{
+	color: #00FF00;
+}
+.rouge{
+	color: #FF0000;
+}
+
+

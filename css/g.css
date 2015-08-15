@@ -86,6 +86,7 @@ div.ress{
 	background-image: url('../img/stream.png');
 	border:1px solid white;
 	border-top: none;
+	border-radius: 3px;
 }
 div.ressA,div.ressB,div.ressC{
 	width: 100px;
@@ -139,6 +140,7 @@ div.menu,div.popTopMenu{
 	background-image: url('../img/stream.png');
 	border:1px solid white;
 	border-bottom: none;
+	border-radius: 3px;
 }
 div.popTopMenu{
 	border:1px solid white;
@@ -376,5 +378,30 @@ div.affImgVxSonde{
 	color: green;
 	font-weight: bold;
 }
-
+/************************************* Flotte D/E *************************************/
+div.flottedefense,div.flotteennemie{
+	width: 165px;
+	height: 155px;
+	position: absolute;
+	top: -35px;
+	left: -50px;
+	z-index: -2;
+}
+div.flottedefense{
+	background-image: url('../img/flottedefense.png');
+}
+div.flotteennemie{
+	background-image: url('../img/flotteennemie.png');
+	left:25px;
+}
+#nbrVaisseauDefense,#nbrVaisseauAttaque{
+	width: 65px;
+	height: 25px;
+	overflow: hidden;
+	position: absolute;
+	left: 41px;
+	top:60px;
+	z-index: -1;
+	text-align: center;
+}
 

@@ -15,12 +15,15 @@ var posMouseX,posMouseY,cursor=false;     // position et état souris
 var clickObject;                          // Click astéroide, station etc...
 var keyClickObject;					      // Key de l'objet cliqué
 var station;                              // affichage de la sation
-var minerai,nrj,argent;                   // variable des ressource
+var minerai=0,nrj=0,argent=0;                   // variable des ressource
 var tmp;                                  // Variable de sauvegarde temporaire
 var tauxRecolte=1;						  // Taux de récolte des astéroides
 var palierUpRecolte=10;					  // Palier pour activer le up récolte
 var tauxAutoRecolte=0;					  // Taux d'auto récolte.
-var palierUpAutoRecolte=1;			  // Palier pour upgrader l'auto récolte
+var palierUpAutoRecolte=1;			  	  // Palier pour upgrader l'auto récolte
+var tauxConstruction=1;					  // taux de construction des vaisseaux
+var nbrVaisseauDefense=0;				  // nombre de vaisseau en défense
+var nbrVaisseauAttaque=0;				  // nombre de vaisseau en attaque
 /*************************************** FONCTION ******************************************/
 function loop(){
 
@@ -66,9 +69,6 @@ function number_format(number, decimals, dec_point, thousands_sep) {
     }
     return s.join(dec);
 }
-function clignotte(id){
-    $('#'+id).delay(100).fadeTo(100,0.5).delay(100).fadeTo(100,1).delay(100).fadeTo(100,0.5).delay(100).fadeTo(100,1);
-}
 function affRetour(mess,laclass){
     if ( $('#reponse').length === 1 ){ $('#reponse').remove(); }
     if ( laclass === undefined ){ var laclass = 'reponseG'; } else { var laclass = 'reponseB'; }
@@ -91,12 +91,6 @@ function genereAsteroide(){
 function interactCursor(){
     
     cursor = false;
-
-    // La station
-    if ( posMouseX > windowWidth/2-50 && posMouseX < windowWidth/2+50 && posMouseY > windowHeight/2-50 && posMouseY < windowHeight/2+50 ){
-        cursor = true;
-        clickObject='station';
-    }
     // Les astéroides
     for ( key in asteroide ){
         if ( posMouseX > asteroide[key].posx && posMouseX < asteroide[key].posx+asteroide[key].affWidth && posMouseY > asteroide[key].posy && posMouseY < asteroide[key].posy+asteroide[key].affHeight ){
@@ -135,10 +129,11 @@ function interactClick(){
     
 }
 function actualiseStock(){
+
     // mets à jour l'affichage
-    $('#minerai').html(number_format(minerai));
-    $('#nrj').html(number_format(nrj));
-    $('#argent').html(number_format(argent));
+    $('#minerai').html(number_format(minerai,',','.',' '));
+    $('#nrj').html(number_format(nrj,',','.',' '));
+    $('#argent').html(number_format(argent,',','.',' '));
 
     // si l'argent dépasse le palier on active le up récolte
     if( argent >= palierUpRecolte ){
@@ -161,6 +156,9 @@ function autoRecolte(){
 }
 function fermerTout(){
 	$('#popTopMenu').fadeOut(250);
+}
+function actualiseDefense(){
+	$('#nbrVaisseauDefense').html(number_format(nbrVaisseauDefense,',','.',' '));
 }
 /************************************* OBJET ******************************************/
 window.requestAnimFrame = (function(){
@@ -280,16 +278,12 @@ $(document).ready(function(){
     elem = document.getElementById('canvas');
     ctx = elem.getContext('2d');
 
-    // stock les ressources dans des variables
-    minerai = parseInt($('#minerai').html());
-    nrj = parseInt($('#nrj').html());
-    argent = parseInt($('#argent').html());
-    // mets en forme l'affichage
-    $('#minerai').html(number_format(minerai,0,',',' '));
-    $('#nrj').html(number_format(nrj,0,',',' '));
-    $('#argent').html(number_format(argent,0,',',' '));
     /***************************** Menu *********************************/
     $('#menu').css({'top':(windowHeight-50)+'px','left':(windowWidth/2-160)+'px'});
+    //flotte ennemi à droite
+    $('.flotteennemie').css({'left':(windowWidth-165+50)+'px'});
+    // nombre flotte ennemi à droite
+    $('#nbrVaisseauAttaque').css({'left':(windowWidth-41-65)+'px'});
     /***************************** PREPARATION OBJET AFFICHAGE *********************************/
     // ajout de X astéroide
     for (var i=0; i<10; i++) {
@@ -370,11 +364,25 @@ $(document).ready(function(){
     		nrj -= palierUpAutoRecolte;
     		actualiseStock();
     		// mise à jour du palier
-    		palierUpAutoRecolte=(tauxAutoRecolte+1)*2;
+    		palierUpAutoRecolte=(tauxAutoRecolte+1)*(tauxAutoRecolte+1);
     		// mise à jour du taux
-    		tauxAutoRecolte+=5;
+    		tauxAutoRecolte+=1;
     		// ferme la fenêtre ( nécessaire pour actualiser les données, système à revoir )
     		$('#popTopMenu').fadeOut(250);
+    	}
+    });
+    			/******************* CONSTRUCTION VAISSEAU ********************/
+    $('#boutonFlotte').click(function(){
+    	var coutMinerai = tauxConstruction*50;
+    	var coutNrj = tauxConstruction*29;
+    	var coutArgent = tauxConstruction*9;
+    	if ( coutMinerai <= minerai && coutNrj <= nrj && coutArgent <= argent ){
+    		nbrVaisseauDefense+=tauxConstruction;
+    		minerai-=coutMinerai;
+    		nrj-=coutNrj;
+    		argent-=coutArgent;
+    		actualiseStock();
+    		actualiseDefense();
     	}
     });
     /***************************** INTERVAL *********************************/

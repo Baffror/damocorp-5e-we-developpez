@@ -19,6 +19,8 @@ var minerai,nrj,argent;                   // variable des ressource
 var tmp;                                  // Variable de sauvegarde temporaire
 var tauxRecolte=1;						  // Taux de récolte des astéroides
 var palierUpRecolte=10;					  // Palier pour activer le up récolte
+var tauxAutoRecolte=0;					  // Taux d'auto récolte.
+var palierUpAutoRecolte=1;			  // Palier pour upgrader l'auto récolte
 /*************************************** FONCTION ******************************************/
 function loop(){
 
@@ -148,20 +150,17 @@ function affResultClick(x,y,color,chiffre){
 	$('#affResultClick').html(chiffre);
 	$('#affResultClick').fadeIn(250,function(){$('#affResultClick').fadeOut(250)});
 }
-function upTauxrecolte(){
-	if ( argent >= palierUpRecolte ){
-		//soustraire le montant et mettre à jour l'affichage
-		argent -= palierUpRecolte;
+function autoRecolte(){
+
+	if ( tauxAutoRecolte > 0 ){
+		minerai+=tauxAutoRecolte;
+		nrj+=tauxAutoRecolte;
+		argent+=tauxAutoRecolte;
 		actualiseStock();
-		//augmente le taux de récolte
-		tauxRecolte++;
-		// nouveau pallier
-		palierUpRecolte+=tauxRecolte*tauxRecolte*10;
-		// Mets à jour l'image d'upgrade du palier
-		$('#imgRecolte').attr('src','img/uprecolteinactif.png');
-		// mets à jour l'affichae du taux de récolte
-		$('#affTauxRecolte').html(tauxRecolte);
 	}
+}
+function fermerTout(){
+	$('#popTopMenu').fadeOut(250);
 }
 /************************************* OBJET ******************************************/
 window.requestAnimFrame = (function(){
@@ -311,13 +310,75 @@ $(document).ready(function(){
     loop();
 
     /***************************** Click action ******************************/
+    // si on lic sur le canvas, on désaffiche toute fenêtre potentiellement ouverte
+    $('#canvas').click(function(){
+    	fermerTout();
+    });
+    			/******************* UP TAUX RECOLTE ********************/
     // Upgrader le taux de récolte
     $('#imgRecolte').click(function(){
     	if( $(this).attr('src') == 'img/uprecolte.gif' ){
-    		upTauxrecolte();
+    		if ( argent >= palierUpRecolte ){
+    			//soustraire le montant et mettre à jour l'affichage
+    			argent -= palierUpRecolte;
+    			actualiseStock();
+    			//augmente le taux de récolte
+    			tauxRecolte++;
+    			// nouveau pallier
+    			palierUpRecolte=tauxRecolte*tauxRecolte/2*10;
+    			// Mets à jour l'image d'upgrade du palier
+    			$('#imgRecolte').attr('src','img/uprecolteinactif.png');
+    			// mets à jour l'affichae du taux de récolte
+    			$('#affTauxRecolte').html(tauxRecolte);
+    		}
     	}
     });
+    			/******************* UP AUTO RECOLTE ********************/
+    // bouton upgrade récolte auto
+    $('#boutonStation').click(function(){
+    	// recadre le block par rapport à la taille écran
+    	var height= $('#popTopMenu').height();
+    	$('#popTopMenu').css({'top':(windowHeight-height-55)+'px','left':(windowWidth/2-160)+'px'});
 
+    	// change l'image si le UP est disponible
+    	if ( minerai >= palierUpAutoRecolte && nrj >= palierUpAutoRecolte && argent >=palierUpAutoRecolte ){
+    		$('#imgUpAutoRecolte').attr({'src':'img/uprecolte.gif'});
+    	} else {
+    		$('#imgUpAutoRecolte').attr({'src':'img/uprecolteinactif.png'});
+    	}
+
+    	//Mets à jour le taux d'auto recolte
+    	$('#tauxAutoRecolte').html(tauxAutoRecolte);
+
+    	// mets à jour les cout
+    	$('#coutMineraiAutoRecolte').html(palierUpAutoRecolte);
+    	$('#coutNrjAutoRecolte').html(palierUpAutoRecolte);
+    	$('#coutArgentAutoRecolte').html(palierUpAutoRecolte);
+
+    	// affiche ou cache le block
+    	if( $('#popTopMenu').css('display') == 'none'){
+    		$('#popTopMenu').fadeIn(250);
+    	} else {
+    		$('#popTopMenu').fadeOut(250);
+    	}
+    });
+    $('#imgUpAutoRecolte').click(function(){
+    	if ( minerai >= palierUpAutoRecolte && nrj >= palierUpAutoRecolte && argent >=palierUpAutoRecolte ){
+    		// mise à jour des ressouces
+    		argent -= palierUpAutoRecolte;
+    		minerai -= palierUpAutoRecolte;
+    		nrj -= palierUpAutoRecolte;
+    		actualiseStock();
+    		// mise à jour du palier
+    		palierUpAutoRecolte=(tauxAutoRecolte+1)*2;
+    		// mise à jour du taux
+    		tauxAutoRecolte+=5;
+    		// ferme la fenêtre ( nécessaire pour actualiser les données, système à revoir )
+    		$('#popTopMenu').fadeOut(250);
+    	}
+    });
+    /***************************** INTERVAL *********************************/
+    var autoRecolteInterval = setInterval(autoRecolte,5000);
     /***************************** EVENEMENT *********************************/
     // curseur sur les objets
     document.getElementById('canvas').addEventListener('mousemove',function(e){posMouseX=e.pageX;posMouseY=e.pageY;},false);

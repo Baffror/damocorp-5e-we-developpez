@@ -131,16 +131,19 @@ div.ressCImg{
 #showHideUp{
 	background-position: 0px -16px;
 }
-div.menu{
+div.menu,div.popTopMenu{
 	position: absolute;
 	z-index: 1000;
-	top:0px;
-	left:0px;
 	width: 320px;
 	height: 50px;
 	background-image: url('../img/stream.png');
 	border:1px solid white;
 	border-bottom: none;
+}
+div.popTopMenu{
+	border:1px solid white;
+	height: auto;
+	display: none;
 }
 div.menu li{
 	display: inline-block;
@@ -360,7 +363,7 @@ div.affImgVxSonde{
 .rouge{
 	color: #FF0000;
 }
-#imgRecolte{
+#imgRecolte,#imgUpAutoRecolte{
 	cursor: pointer;
 }
 /************************************* affResultClick *************************************/

@@ -65,6 +65,8 @@ input, select {
 body{
 	overflow: hidden;
 	background-image: url('../img/fond_game.jpg');
+	color: white;
+	font-weight: bold;
 }
 div.affUp{
 	position: absolute;
@@ -340,7 +342,7 @@ div.reponseB{
 	background-color: #FFBFBF;
 	box-shadow:inset 0px 0px 25px 1px red;
 }
-/********************************************* SONDER *************************************************/
+/************************************** SONDER ******************************************/
 div.affImgVxSonde{
 	width: 50px;
 	height: 50px;
@@ -351,12 +353,25 @@ div.affImgVxSonde{
 #sonder input[type="text"]{
 	text-align: center;
 }
-/********************************************* DIVERS *************************************************/
+/************************************* DIVERS *********************************************/
 .vert{
 	color: #00FF00;
 }
 .rouge{
 	color: #FF0000;
+}
+#imgRecolte{
+	cursor: pointer;
+}
+/************************************* affResultClick *************************************/
+#affResultClick{
+	position: absolute;
+	top:0px;
+	left: 0px;
+	z-index: 15000;
+	font-size: 30px;
+	color: green;
+	font-weight: bold;
 }
 
 

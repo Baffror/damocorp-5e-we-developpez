@@ -13,12 +13,12 @@ var windowWidth = window.innerWidth;      // largeur fenetre
 var asteroide = new Array();              // tableau des objets astéroides
 var posMouseX,posMouseY,cursor=false;     // position et état souris
 var clickObject;                          // Click astéroide, station etc...
+var keyClickObject;					      // Key de l'objet cliqué
 var station;                              // affichage de la sation
-var champDeForce=false;                   // affiche le champ de force autour de l'astéroide au clic
-var cptAffChampDeForce=0;                 // variable du champ de force
 var minerai,nrj,argent;                   // variable des ressource
 var tmp;                                  // Variable de sauvegarde temporaire
-
+var tauxRecolte=1;						  // Taux de récolte des astéroides
+var palierUpRecolte=10;					  // Palier pour activer le up récolte
 /*************************************** FONCTION ******************************************/
 function loop(){
 
@@ -99,7 +99,8 @@ function interactCursor(){
     for ( key in asteroide ){
         if ( posMouseX > asteroide[key].posx && posMouseX < asteroide[key].posx+asteroide[key].affWidth && posMouseY > asteroide[key].posy && posMouseY < asteroide[key].posy+asteroide[key].affHeight ){
             cursor = true;
-            clickObject = key;
+            clickObject = 'asteroide';
+            keyClickObject = key;
             break;
         }
     }
@@ -112,65 +113,57 @@ function interactCursor(){
 }
 function interactClick(){
     // clic sur un astéroide
-    if ( cursor && !champDeForce && clickObject!='station' ){
-        // stock l'astéroide cliqué
-        champDeForce = clickObject;
-
-        if ( asteroide[champDeForce].srcX === 150 ){
-            var typeAsteroide='minerai';
-        } else if ( asteroide[champDeForce].srcX === 200 ){
-            var typeAsteroide='nrj';
+    
+    if ( cursor && clickObject=='asteroide' ){
+        // stock les positions de l'astéroides
+        var x = asteroide[keyClickObject].posx+asteroide[keyClickObject].width;
+        var y = asteroide[keyClickObject].posy-asteroide[keyClickObject].height/2;
+        // affiche le gain sur l'écran
+        affResultClick(x,y,'green','+'+tauxRecolte);
+        // ajoute la récolte et actualise l'affichage
+        if( asteroide[keyClickObject].srcX === 150 ){
+        	minerai += tauxRecolte;
+        } else if( asteroide[keyClickObject].srcX === 200 ){
+        	nrj += tauxRecolte;
         } else {
-            var typeAsteroide='argent';
+        	argent += tauxRecolte;
         }
-
-    }
-}
-function addRecolte(qt,type){
-    // ajoute la quantité récolté
-    switch (type){
-        case 'minerai':
-            var actuel = minerai+parseInt(qt);
-            break;
-        case 'nrj':
-            var actuel = nrj+parseInt(qt);
-            break;
-        case 'argent':
-            var actuel = argent+parseInt(qt);
-            break;
+        actualiseStock();
     }
     
-    // Montre le bénéfice et l'efface ensuite
-    var date = new Date();
-    var id = 'div'+date.getTime();
-    if (qt>=0){ var color='green';var sym='+ '; } else { var color='red';var sym='- '; }
-    $('#ress'+type).append('<div id="'+id+'" style="color:'+color+';">Scan...</div>');
-
-    
-
-    // efface le bénéfice et reset l'astéroide
-    setTimeout(function(){
-        $('#'+id).fadeOut(1000,function(){
-            $('#'+id).html(sym+number_format(qt,0,',',' '));
-            $('#'+type).html(number_format(actuel,0,',',' '));
-            $('#'+id).fadeIn(1000,function(){
-                setTimeout(function(){
-                    $('#'+id).remove();
-                    asteroide[champDeForce].resetPosition();
-                    champDeForce=false;
-                },1000);
-            });
-        });
-    },2000);
-
 }
 function actualiseStock(){
     // mets à jour l'affichage
     $('#minerai').html(number_format(minerai));
     $('#nrj').html(number_format(nrj));
     $('#argent').html(number_format(argent));
+
+    // si l'argent dépasse le palier on active le up récolte
+    if( argent >= palierUpRecolte ){
+    	$('#imgRecolte').attr('src','img/uprecolte.gif');
+    }
 }
-/******************************************** OBJET ************************************************/
+function affResultClick(x,y,color,chiffre){
+	$('#affResultClick').css({'top':y+'px','left':x+'px','color':color,'opacity':100,'display':'block'});
+	$('#affResultClick').html(chiffre);
+	$('#affResultClick').fadeIn(250,function(){$('#affResultClick').fadeOut(250)});
+}
+function upTauxrecolte(){
+	if ( argent >= palierUpRecolte ){
+		//soustraire le montant et mettre à jour l'affichage
+		argent -= palierUpRecolte;
+		actualiseStock();
+		//augmente le taux de récolte
+		tauxRecolte++;
+		// nouveau pallier
+		palierUpRecolte+=tauxRecolte*tauxRecolte*10;
+		// Mets à jour l'image d'upgrade du palier
+		$('#imgRecolte').attr('src','img/uprecolteinactif.png');
+		// mets à jour l'affichae du taux de récolte
+		$('#affTauxRecolte').html(tauxRecolte);
+	}
+}
+/************************************* OBJET ******************************************/
 window.requestAnimFrame = (function(){
     return window.requestAnimationFrame ||
     window.webkitRequestAnimationFrame  ||
@@ -201,14 +194,12 @@ affImg.prototype.draw = function(){
 }
 affImg.prototype.move = function(){
 
-    if ( !champDeForce || champDeForce && asteroide[champDeForce].posx!==this.posx ){
-        this.posx+=this.sensX;
-        this.posy+=this.sensY;
+    this.posx+=this.sensX;
+    this.posy+=this.sensY;
 
-        // relance l'astéroide s'il sort de la zone
-        if ( this.posx > windowWidth+250 || this.posy > windowHeight+250 || this.posx < -250 || this.posy < -250 ){
-            this.resetPosition();
-        }
+    // relance l'astéroide s'il sort de la zone
+    if ( this.posx > windowWidth+250 || this.posy > windowHeight+250 || this.posx < -250 || this.posy < -250 ){
+        this.resetPosition();
     }
 }
 affImg.prototype.resetPosition = function(){
@@ -281,7 +272,7 @@ affImg.prototype.resetPosition = function(){
         this.srcX=250;
     }
 }
-/******************************************** JQUERY ************************************************/
+/***************************************** JQUERY *********************************************/
 $(document).ready(function(){
 
     // Ajout du canvas
@@ -318,6 +309,14 @@ $(document).ready(function(){
 
     //lancement de la boucle
     loop();
+
+    /***************************** Click action ******************************/
+    // Upgrader le taux de récolte
+    $('#imgRecolte').click(function(){
+    	if( $(this).attr('src') == 'img/uprecolte.gif' ){
+    		upTauxrecolte();
+    	}
+    });
 
     /***************************** EVENEMENT *********************************/
     // curseur sur les objets

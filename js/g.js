@@ -169,6 +169,8 @@ function actualiseStock(){
     // si l'argent dépasse le palier on active le up récolte
     if( argent >= palierUpRecolte ){
     	$('#imgRecolte').attr('src','img/uprecolte.gif');
+    } else {
+    	$('#imgRecolte').attr('src','img/uprecolteinactif.png');
     }
 }
 function affResultClick(x,y,color,chiffre){
@@ -266,7 +268,7 @@ function combattre(){
 
 		var perteDefense = Math.floor(nbrVaisseauDefense*perte/100);
 		// secruité anti-perte abusives
-		perteDefense = Math.max(perteDefense,10*nbrVaisseauAttaque);
+		perteDefense = Math.min(perteDefense,10*nbrVaisseauAttaque);
 		// perte défenseur
 		nbrVaisseauDefense -= perteDefense;
 		// stats perte vaisseau
@@ -292,7 +294,7 @@ function combattre(){
 
 		var perteEnnemie = Math.floor(nbrVaisseauAttaque*perte/100);
 		// Securité anti perte abusive
-		perteEnnemie = Math.max(perteEnnemie,10*nbrVaisseauDefense);
+		perteEnnemie = Math.min(perteEnnemie,10*nbrVaisseauDefense);
 		// stat vaisseau détruit
 		nbrVaisseauDetruit += perteEnnemie;
 		// perte ennemie
@@ -339,6 +341,8 @@ function finDuJeu(){
 
 	// on ferme l'interface si ouverte
 	fermerTout();
+	$('#tutoriel').animate({'left':'+=505'},300);
+	$('#armurierTutoriel').animate({'left':'+=505'},300);
 
 	// récupération du texte
 	textMachineAEcrire = $('#textMechant').html();
@@ -545,6 +549,9 @@ $(document).ready(function(){
     // message de fin de l'ennemi
     $('#affFinDeGameMechant').css({'top':(windowHeight/2-75)+'px','left':'-505px'});
     $('#affFinDeGameGentil').css({'top':(windowHeight/2-75)+'px','left':(windowWidth)+'px'});
+    // tutoriel
+    $('#tutoriel').css({'top':(windowHeight/2-75)+'px','left':(windowWidth-455)+'px'});
+    $('#armurierTutoriel').css({'top':(windowHeight/2-75+160)+'px','left':(windowWidth)+'px'});
 
     /***************************** PREPARATION OBJET AFFICHAGE *********************************/
     // ajout de X astéroide
@@ -630,7 +637,7 @@ $(document).ready(function(){
     		// mise à jour du palier
     		palierUpAutoRecolte=(tauxAutoRecolte+1)*(tauxAutoRecolte+1);
     		// mise à jour du taux
-    		tauxAutoRecolte+=2;
+    		tauxAutoRecolte+=5;
     		// ferme la fenêtre ( nécessaire pour actualiser les données, système à revoir )
     		$('#popTopMenu').fadeOut(250);
     	}
@@ -731,6 +738,104 @@ $(document).ready(function(){
     			}
     		  );
     });
+				/******************* TUTORIEL ********************/
+	$('body').on('click','#closeTuto',function(){
+		$('#tutoriel').animate({'left':'+=505'},300);
+		$('#armurierTutoriel').animate({'left':'+=505'},300);
+		$('#fleche_haut,#fleche_haut_gauche,#fleche_haut_droite,#fleche_droite,#fleche_bas').fadeOut(250);
+	});
+	// etape 1
+	$('body').on('click','#openTuto',function(){
+		textMachineAEcrire="Sur votre gauche est le nombre de chasseur disponible. Sur la droite, l'état de la flotte ennemie. <br /> <input id=\"etape2\" type=\"submit\" value=\"Suivant\" /> <input id=\"closeTuto\" type=\"submit\" value=\"Fermer\" /> ";
+		$('#textGentil').html('');
+		// reinitisalise les variable
+		currentChar = 1;
+		htmltag = false;
+		cible='textTuto';
+		machine();
+		$('#fleche_haut_gauche').css({'top':'100px','left':'100px'});
+		$('#fleche_haut_droite').css({'top':'100px','left':(windowWidth-250)+'px'});
+	});
+	// etape 2
+	$('body').on('click','#etape2',function(){
+		$('#fleche_haut,#fleche_haut_gauche,#fleche_haut_droite,#fleche_droite,#fleche_bas').fadeOut(250,function(){
+			$('#fleche_haut').css({'top':'80px','left':(windowWidth/2-8)+'px'});
+			$('#fleche_haut').fadeIn(250);
+		});
+		textMachineAEcrire="Cliquez sur des astéroides doré et vous pourrez upgrader votre vitesse de récolte au clic lorsque nous aurons assez de ressource. Vert => nous avons assez de ressource<br /> <input id=\"etape3\" type=\"submit\" value=\"Suivant\" /> <input id=\"closeTuto\" type=\"submit\" value=\"Fermer\" /> ";
+		$('#textGentil').html('');
+		// reinitisalise les variable
+		currentChar = 1;
+		htmltag = false;
+		cible='textTuto';
+		machine();
+	});
+	// etape 3
+	$('body').on('click','#etape3',function(){
+		$('#fleche_haut,#fleche_haut_gauche,#fleche_haut_droite,#fleche_droite,#fleche_bas').fadeOut(250,function(){
+			$('#fleche_bas').css({'top':(windowHeight-40-150)+'px','left':(windowWidth/2-115)+'px'});
+			$('#fleche_bas').fadeIn(250);
+		});
+		textMachineAEcrire="Pour se défendre il nous faut des ressources. Upgrader aussi vite que possible le système d'auto-récolte<br /> <input id=\"etape4\" type=\"submit\" value=\"Suivant\" /> <input id=\"closeTuto\" type=\"submit\" value=\"Fermer\" /> ";
+		$('#textGentil').html('');
+		// reinitisalise les variable
+		currentChar = 1;
+		htmltag = false;
+		cible='textTuto';
+		machine();
+	});
+	// etape 4
+	$('body').on('click','#etape4',function(){
+		$('#fleche_haut,#fleche_haut_gauche,#fleche_haut_droite,#fleche_droite,#fleche_bas').fadeOut(250,function(){
+			$('#fleche_bas').css({'top':(windowHeight-40-150)+'px','left':(windowWidth/2-215)+'px'});
+			$('#fleche_bas').fadeIn(250);
+		});
+		textMachineAEcrire="Cliquez sur ce bouton pour construire des chasseurs en défense. Le cout vaut respectivement 50 / 29 / 9. Gardez un oeil sur les ressources.<br /> <input id=\"etape5\" type=\"submit\" value=\"Suivant\" /> <input id=\"closeTuto\" type=\"submit\" value=\"Fermer\" /> ";
+		$('#textGentil').html('');
+		// reinitisalise les variable
+		currentChar = 1;
+		htmltag = false;
+		cible='textTuto';
+		machine();
+	});
+	// etape 5
+	$('body').on('click','#etape5',function(){
+		$('#fleche_haut,#fleche_haut_gauche,#fleche_haut_droite,#fleche_droite,#fleche_bas').fadeOut(250,function(){
+			$('#fleche_bas').css({'top':(windowHeight-40-150)+'px','left':(windowWidth/2-165)+'px'});
+			$('#fleche_bas').fadeIn(250);
+		});
+		textMachineAEcrire="Nos ennemis ont énormement de renforts. N'hésitez pas à augmenter notre capacité de production si nous avons les ressources. Chaque upgrade permettra de produire +1 vaisseau par clic.<br /> <input id=\"etape6\" type=\"submit\" value=\"Suivant\" /> <input id=\"closeTuto\" type=\"submit\" value=\"Fermer\" /> ";
+		$('#textGentil').html('');
+		// reinitisalise les variable
+		currentChar = 1;
+		htmltag = false;
+		cible='textTuto';
+		machine();
+	});
+	// etape 6
+	$('body').on('click','#etape6',function(){
+		$('#fleche_haut,#fleche_haut_gauche,#fleche_haut_droite,#fleche_droite,#fleche_bas').fadeOut(250,function(){
+			$('#fleche_bas').css({'top':(windowHeight-40-150)+'px','left':(windowWidth/2-65)+'px'});
+			$('#fleche_bas').fadeIn(250);
+		});
+		textMachineAEcrire="Lorque vous l'estimerez nécessaire, cliquez sur ce bouton, et nous irons nous battre jusqu'à la mort si nécessaire.<br /> <input id=\"closeTuto\" type=\"submit\" value=\"Fermer\" /> ";
+		$('#textGentil').html('');
+		// reinitisalise les variable
+		currentChar = 1;
+		htmltag = false;
+		cible='textTuto';
+		machine();
+		setTimeout(function(){
+			$('#armurierTutoriel').animate({'left':'-=455'},300);
+			textMachineAEcrire=$('#textTutoArmurier').html();
+			$('#textTutoArmurier').html('');
+			// reinitisalise les variable
+			currentChar = 1;
+			htmltag = false;
+			cible='textTutoArmurier';
+			machine();
+		},7500);
+	});
     /***************************** INTERVAL *********************************/
     autoRecolteInterval = setInterval(autoRecolte,5000);
     ennemyIncoming = setInterval(addVaisseauAttaque,1000);

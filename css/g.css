@@ -409,7 +409,7 @@ div.flotteennemie{
 	text-align: center;
 }
 /************************************* PDV STATION *************************************/
-div.pdvStation,div.nbrPdvStation{
+div.pdvStation{
 	border:1px solid black;
 	width: 100px;
 	height: 10px;
@@ -420,7 +420,12 @@ div.pdvStation,div.nbrPdvStation{
 	text-align: center;
 }
 div.nbrPdvStation{
-	background-color: none;
+	border:1px solid black;
+	width: 100px;
+	height: 10px;
+	position: absolute;
+	font-size: 10px;
+	text-align: center;
 	z-index: -2;
 }
 /************************************* FIN DU JEU *************************************/
@@ -428,17 +433,17 @@ div.affFinDeGameMechant img{
 	float: left;
 	margin-right: 5px;
 }
-div.affFinDeGameGentil img{
+div.affFinDeGameGentil img,div.tutoriel img{
 	float: right;
 	margin-left: 5px;
 }
-div.affFinDeGameMechant img,div.affFinDeGameGentil img{
+div.affFinDeGameMechant img,div.affFinDeGameGentil img,div.tutoriel img{
 	text-align: justify;
 }
-div.affFinDeGameMechant p,div.affFinDeGameGentil p{
+div.affFinDeGameMechant p,div.affFinDeGameGentil p,,div.tutoriel p{
 	padding: 5px;
 }
-div.affFinDeGameMechant,div.affFinDeGameGentil{
+div.affFinDeGameMechant,div.affFinDeGameGentil,div.tutoriel{
 	position: absolute;
 	z-index: 5;
 	width: 450px;
@@ -469,4 +474,13 @@ tr:nth-child(even){
 /************************************* TABLEAU *************************************/
 a:link {color: #639cfc ; text-decoration: none ;}
 a:visited {color: #639cfc; }
-a:hover { color: #639cfc ; text-decoration: underline ; }  
+a:hover { color: #639cfc ; text-decoration: underline ; } 
+/************************************* TUTORIEL *************************************/
+.help{
+	position: absolute;
+	width: 150px;
+	height: 150px;
+	z-index: -1;
+	top:-150px;
+	left: -150px;
+}

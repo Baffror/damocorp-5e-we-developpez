@@ -89,6 +89,7 @@ $res = $res->fetchAll(PDO::FETCH_ASSOC);
 page();
 ?>
 <body>
+	<div style="text-align:center;"><input type="submit" value="relancer une partie" onClick="window.location='index.html';" /></div>
 	<table>
 		<tr>
 			<th><a href="classement.php?order=nom&sens=<?php echo $lienSens; ?>&page=<?php echo $page; ?>">Nom</a></th>
@@ -124,6 +125,7 @@ page();
 		}
 		?>
 	</table>
+	<div style="text-align:center;"><input type="submit" value="relancer une partie" onClick="window.location='index.html';" /></div>
 <?php
 page();
 ?>

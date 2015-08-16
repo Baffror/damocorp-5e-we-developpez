@@ -36,6 +36,7 @@ var recolteAuto=0;				          // stats du jeu
 var score=0;							  // stats du jeu
 var soundAttaqueStation = document.querySelector('#attaqueStation');// Son petit explosion
 var soundAttaqueEnnemie = document.querySelector('#attaqueEnnemie');// Son petit explosion
+var damocorp = document.querySelector('#damocorp');// Son petit explosion
 var timerAntiSaoul = Math.round(+new Date()/1000); // timer anti saoulage a cause du son
 /*************************************** FONCTION ******************************************/
 function loop(){
@@ -317,6 +318,11 @@ function pertePdv(){
 	}
 }
 function finDuJeu(){
+
+	// son intro et fin
+    damocorp.volume = 1;
+    damocorp.play();
+
 	// on stop les intervals
 	clearInterval(autoRecolteInterval);
 	clearInterval(ennemyIncoming);
@@ -533,6 +539,10 @@ $(document).ready(function(){
     // Elem + ctx
     elem = document.getElementById('canvas');
     ctx = elem.getContext('2d');
+
+    // son intro et fin
+    damocorp.volume = 1;
+    damocorp.play();
 
     /***************************** Menu *********************************/
     $('#menu').css({'top':(windowHeight-50)+'px','left':(windowWidth/2-160)+'px'});

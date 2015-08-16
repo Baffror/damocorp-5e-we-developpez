@@ -42,6 +42,9 @@ var recolteManuelNrj=0;				      // stats du jeu
 var recolteManuelArgent=0;				  // stats du jeu
 var recolteAuto=0;				          // stats du jeu
 var score=0;							  // stats du jeu
+var soundAttaqueStation = document.querySelector('#attaqueStation');// Son petit explosion
+var soundAttaqueEnnemie = document.querySelector('#attaqueEnnemie');// Son petit explosion
+var timerAntiSaoul = Math.round(+new Date()/1000); // timer anti saoulage a cause du son
 /*************************************** FONCTION ******************************************/
 function loop(){
 
@@ -201,12 +204,34 @@ function addVaisseauAttaque(){
 	var diff = Math.round(+new Date()/1000)-countTime;
 	// ajoute le nombre de vaisseau
 	var nbr = Math.floor(Math.random()*diff/30)
-	nbr+=100000;
+
 	if (nbr>0){
 		nbrVaisseauAttaque+=nbr;
 		// mets à jours l'affichage
 		actualiseFlotte();
 	}
+
+}
+function playSound(qui){
+	// temps entre deux son
+	var diff = Math.round(+new Date()/1000)-timerAntiSaoul;
+
+	// lance le son en fonction de l'explosion station ou d'une attaque lancé
+	var rand = Math.ceil(Math.random()*4);
+	if ( qui != undefined && qui == 'station' ){
+		if ( diff > 15 ){
+			soundAttaqueStation.setAttribute('src','son/explosion'+rand+'.mp3');
+			soundAttaqueStation.play();
+			soundAttaqueStation.volume = 1;
+			// mets à jour le timer 
+			timerAntiSaoul=Math.round(+new Date()/1000);
+		}
+	} else {
+		attaqueEnnemie.setAttribute('src','son/laser'+rand+'.mp3');
+		soundAttaqueEnnemie.play();
+		soundAttaqueEnnemie.volume = 1;
+	}
+
 
 }
 function explosion(id,top,left,repeat){
@@ -230,6 +255,8 @@ function combattre(){
 	explosion(id,45,60);
 	explosion(id+'B',45,windowWidth-85);
 
+	// lance le son
+	playSound('ennemi');
 
 	// si la flotte en défense est supérieur à l'attaque = 20-60/100
 	if ( nbrVaisseauDefense >= nbrVaisseauAttaque ){
@@ -238,6 +265,8 @@ function combattre(){
 		if ( perte > 60 ){ perte=60; } else if ( perte < 20 ) { perte =20; }
 
 		var perteDefense = Math.floor(nbrVaisseauDefense*perte/100);
+		// secruité anti-perte abusives
+		perteDefense = Math.max(perteDefense,10*nbrVaisseauAttaque);
 		// perte défenseur
 		nbrVaisseauDefense -= perteDefense;
 		// stats perte vaisseau
@@ -262,6 +291,8 @@ function combattre(){
 		nbrVaisseauDefense = 0;
 
 		var perteEnnemie = Math.floor(nbrVaisseauAttaque*perte/100);
+		// Securité anti perte abusive
+		perteEnnemie = Math.max(perteEnnemie,10*nbrVaisseauDefense);
 		// stat vaisseau détruit
 		nbrVaisseauDetruit += perteEnnemie;
 		// perte ennemie
@@ -282,6 +313,8 @@ function pertePdv(){
 			endGame = true;
 			pdvStation = 0;
 		}
+		// son
+		playSound('station');
 		//explosion
 		explosion(degat,windowHeight/2+25,windowWidth/2-15);
 		// update affichage pdv
@@ -597,7 +630,7 @@ $(document).ready(function(){
     		// mise à jour du palier
     		palierUpAutoRecolte=(tauxAutoRecolte+1)*(tauxAutoRecolte+1);
     		// mise à jour du taux
-    		tauxAutoRecolte+=1;
+    		tauxAutoRecolte+=2;
     		// ferme la fenêtre ( nécessaire pour actualiser les données, système à revoir )
     		$('#popTopMenu').fadeOut(250);
     	}

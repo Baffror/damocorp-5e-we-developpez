@@ -21,16 +21,35 @@
         --><div class="ressB"><div class="ressBImg"></div><span id="coutNrjAutoRecolte">0</span></div><!--
         --><div class="ressC"><div class="ressCImg"></div><span id="coutArgentAutoRecolte">0</span></div>
     </div>
+    <div id="popTopMenu2" class="popTopMenu">
+        <h1 class="center">Construction de vaisseau X <span id="tauxConstructionDefense">0</span></h1>
+        <div class="center" style="margin:5px 0px 5px 0px"><img id="imgUpTauxConstructionDefense" src="img/uprecolteinactif.png" width="44" heigh="15" /></div>
+        <h1 class="center">Coût upgrade :</h1>
+        <div class="ressA"><div class="ressAImg"></div><span id="coutMineraiUpTauxConstructionDefense">0</span></div><!--
+        --><div class="ressB"><div class="ressBImg"></div><span id="coutNrjUpTauxConstructionDefense">0</span></div>
+    </div>
     <div id="menu" class="menu">
         <ul>
             <li id="boutonFlotte"></li><!--
+            --><li id="boutonUpFlotte"></li><!--
             --><li id="boutonStation"></li><!--
-            --><li id="boutonSonde"></li>
+            --><li id="boutonAttaque"></li><!--
+            --><li id="boutonAide"></li>
         </ul>
     </div>
     <div class="flottedefense"></div><div id="nbrVaisseauDefense">0</div>
     <div class="flotteennemie"></div><div id="nbrVaisseauAttaque">0</div>
     <div id="affResultClick"></div>
+    <div id="pdvStation" class="pdvStation"></div>
+    <div id="nbrPdvStation" class="nbrPdvStation"><span id="affPdvStation">50.000</span> / 50.000</div>
+    <div id="affFinDeGameMechant" class="affFinDeGameMechant">
+        <img src="img/savant-fou-colo150.jpg" width="150px" height="150px">
+        <p id="textMechant">Je t'avais prévenu espèce de poulpe de l'espace. Nul ne peux me vaincre ! J'éradiquerai toute ton espèce de l'univers, tu n'es que le premier sur ma longue liste. <br /><br />HAHAHAHAHahahahahaha</p>
+    </div>
+    <div id="affFinDeGameGentil" class="affFinDeGameGentil">
+        <img src="img/commandant-colo150.jpg" width="150px" height="150px">
+        <p id="textGentil">Commandant,<br/>Je recommande l'envoi de toutes nos informations pour aider nos alliés. Nous avons perdu cette bataille, mais pas la guerre.</p>
+    </div>
     <script src="js/jquery.min.js"></script>
     <script src="js/g.js"></script>
     </body>

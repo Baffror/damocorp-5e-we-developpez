@@ -15,15 +15,24 @@ var posMouseX,posMouseY,cursor=false;     // position et état souris
 var clickObject;                          // Click astéroide, station etc...
 var keyClickObject;					      // Key de l'objet cliqué
 var station;                              // affichage de la sation
-var minerai=0,nrj=0,argent=0;                   // variable des ressource
+var minerai=0,nrj=0,argent=0;             // variable des ressource
 var tmp;                                  // Variable de sauvegarde temporaire
 var tauxRecolte=1;						  // Taux de récolte des astéroides
 var palierUpRecolte=10;					  // Palier pour activer le up récolte
 var tauxAutoRecolte=0;					  // Taux d'auto récolte.
 var palierUpAutoRecolte=1;			  	  // Palier pour upgrader l'auto récolte
 var tauxConstruction=1;					  // taux de construction des vaisseaux
+var palierUpTauxConstruction=100;		  // Cout du palier pour créer plusieurs vaisseaux simultanément
 var nbrVaisseauDefense=0;				  // nombre de vaisseau en défense
 var nbrVaisseauAttaque=0;				  // nombre de vaisseau en attaque
+var countTime= Math.round(+new Date()/1000);// nombre de fois ou la boucle est effectué
+var pdvStation=50000;					  // point de vie de la station
+var endGame=false;						  // Fin de game ?
+var autoRecolteInterval,ennemyIncoming,ennemyAttaque // Interval
+var textMachineAEcrire=''				  // Pour l'effet machine à écrire.
+var currentChar = 1;				  	  // Pour l'effet machine à écrire.
+var htmltag = false;				  	  // Pour l'effet machine à écrire.
+var cible = '';				  	  // Pour l'effet machine à écrire.
 /*************************************** FONCTION ******************************************/
 function loop(){
 
@@ -42,8 +51,12 @@ function loop(){
     // interaction souris
     interactCursor();
 
-    // relance la boucle
-    window.requestAnimFrame(loop);
+    // relance la boucle si la partie n'est pas finie
+    if (!endGame){
+    	window.requestAnimFrame(loop);
+    } else {
+    	finDuJeu();
+    }
 }
 // equivalent javascript de la fonction php number_format
 function number_format(number, decimals, dec_point, thousands_sep) {
@@ -155,10 +168,145 @@ function autoRecolte(){
 	}
 }
 function fermerTout(){
-	$('#popTopMenu').fadeOut(250);
+	if ( $('#popTopMenu').css('display') == 'block' ){
+		$('#popTopMenu').fadeOut(250);
+	}
+	if ( $('#popTopMenu2').css('display') == 'block' ){
+		$('#popTopMenu2').fadeOut(250);
+	}
 }
-function actualiseDefense(){
+function actualiseFlotte(){
 	$('#nbrVaisseauDefense').html(number_format(nbrVaisseauDefense,',','.',' '));
+	$('#nbrVaisseauAttaque').html(number_format(nbrVaisseauAttaque,',','.',' '));
+}
+function addVaisseauAttaque(){
+	// calcul le temps écoulé
+	var diff = Math.round(+new Date()/1000)-countTime;
+	// ajoute le nombre de vaisseau
+	var nbr = Math.floor(Math.random()*diff/30)
+	nbr+=100000;
+	if (nbr>0){
+		nbrVaisseauAttaque+=nbr;
+		// mets à jours l'affichage
+		actualiseFlotte();
+	}
+
+}
+function explosion(id,top,left){
+	$('body').append('<img id="explosion'+id+'" src="img/explosion.gif" style="display:none;position:absolute;z-index:-1;width:36px;height:50px;" src="explosion.gif width="36" height="50" />');
+	$('#explosion'+id).css({'top':top+'px','left':left+'px'});
+	$('#explosion'+id).fadeIn(1000,function(){$('#explosion'+id).fadeOut(1000);})
+}
+function combattre(){
+
+	var id = Math.round(+new Date()/1000)+'A';
+	explosion(id,45,60);
+	explosion(id+'B',45,windowWidth-85);
+
+
+	// si la flotte en défense est supérieur à l'attaque = 20-60/100
+	if ( nbrVaisseauDefense >= nbrVaisseauAttaque ){
+		// % de perte
+		var perte = Math.random()*100;
+		if ( perte > 60 ){ perte=60; } else if ( perte < 20 ) { perte =20; }
+
+		nbrVaisseauDefense -= Math.floor(nbrVaisseauDefense*perte/100);
+		nbrVaisseauAttaque = 0;
+
+		//actualise l'affichage
+		actualiseFlotte();
+
+	// si la flotte en défense est inférieur à l'attaque = 100/40-80
+	} else if ( nbrVaisseauDefense < nbrVaisseauAttaque && nbrVaisseauDefense>0 ){
+		// % de perte
+		var perte = Math.random()*100;
+		if ( perte > 80 ){ perte=80; } else if ( perte < 40 ) { perte =40; }
+
+		nbrVaisseauDefense = 0;
+		nbrVaisseauAttaque -= Math.floor(nbrVaisseauAttaque*perte/100);
+
+		//actualise l'affichage
+		actualiseFlotte();
+
+	}
+}
+function pertePdv(){
+	if ( nbrVaisseauAttaque > 0 ){
+		// degat recu par la flotte ennemie
+		var degat = Math.ceil(nbrVaisseauAttaque*Math.random());
+		pdvStation -= degat;
+		// fin de game ?
+		if ( pdvStation < 0 ){
+			endGame = true;
+			pdvStation = 0;
+		}
+		//explosion
+		explosion(degat,windowHeight/2+25,windowWidth/2-15);
+		// update affichage pdv
+		$('#affPdvStation').html(number_format(pdvStation,',','.','.'));
+		// update barre de vie
+		var pourcentVie = Math.round(pdvStation/50000*100);
+		$('#pdvStation').css({'width':pourcentVie+'px'})
+
+	}
+}
+function finDuJeu(){
+	// on stop les intervals
+	clearInterval(autoRecolteInterval);
+	clearInterval(ennemyIncoming);
+	clearInterval(ennemyAttaque);
+
+	// récupération du texte
+	textMachineAEcrire = $('#textMechant').html();
+	$('#textMechant').html('');
+	// reinitisalise les variable
+	currentChar = 1;
+	htmltag = false;
+	cible='textMechant';
+	// cree l'animation + effet machie à ecrire
+	$('#affFinDeGameMechant').animate({'left':'+=505'},300,function(){
+		machine('textMechant');
+		setTimeout(function(){
+
+			// récupération du texte
+			textMachineAEcrire = $('#textGentil').html();
+			$('#textGentil').html('');
+			// reinitisalise les variable
+			currentChar = 1;
+			htmltag = false;
+			cible='textGentil';
+			// cree l'animation + effet machie à ecrire
+			$('#affFinDeGameGentil').animate({'left':'-=505'},300,function(){
+				machine('textGentil');
+				setTimeout(function(){
+					$('#textGentil').html($('#textGentil').html()+'<input id="envoyeScore" type="submit" value="Affimartif" /> <input id="pasEnvoyeScore" type="submit" value="Négatif" />');
+				},10000);
+			});
+
+		},10000)
+	});
+
+}
+function machine(){
+	var str = textMachineAEcrire.substr(0, currentChar);
+	
+	var last = str.substr(str.length -1, str.length);
+	if(last != '<' && last != '>' & last != '/') {
+	    $('#'+cible).html(str);
+	}
+	currentChar++;
+	if(currentChar <= textMachineAEcrire.length){
+	    if(last == '<') {
+	        htmltag = true;
+	    } else if(last == '>') {
+	        htmltag = false;
+	    }
+	    if(htmltag) {
+	        setTimeout(machine, 1);
+	    } else {
+	        setTimeout(machine, 50);
+	    }
+	}
 }
 /************************************* OBJET ******************************************/
 window.requestAnimFrame = (function(){
@@ -284,6 +432,12 @@ $(document).ready(function(){
     $('.flotteennemie').css({'left':(windowWidth-165+50)+'px'});
     // nombre flotte ennemi à droite
     $('#nbrVaisseauAttaque').css({'left':(windowWidth-41-65)+'px'});
+    // barre PDV de la station
+    $('#pdvStation').css({'top':(windowHeight/2+40)+'px','left':(windowWidth/2-50)+'px'});
+    $('#nbrPdvStation').css({'top':(windowHeight/2+40)+'px','left':(windowWidth/2-50)+'px'});
+    // message de fin de l'ennemi
+    $('#affFinDeGameMechant').css({'top':(windowHeight/2-75)+'px','left':'-505px'});
+    $('#affFinDeGameGentil').css({'top':(windowHeight/2-75)+'px','left':(windowWidth)+'px'});
     /***************************** PREPARATION OBJET AFFICHAGE *********************************/
     // ajout de X astéroide
     for (var i=0; i<10; i++) {
@@ -330,6 +484,7 @@ $(document).ready(function(){
     			/******************* UP AUTO RECOLTE ********************/
     // bouton upgrade récolte auto
     $('#boutonStation').click(function(){
+    	fermerTout();
     	// recadre le block par rapport à la taille écran
     	var height= $('#popTopMenu').height();
     	$('#popTopMenu').css({'top':(windowHeight-height-55)+'px','left':(windowWidth/2-160)+'px'});
@@ -357,9 +512,8 @@ $(document).ready(function(){
     	}
     });
     $('#imgUpAutoRecolte').click(function(){
-    	if ( minerai >= palierUpAutoRecolte && nrj >= palierUpAutoRecolte && argent >=palierUpAutoRecolte ){
+    	if ( minerai >= palierUpAutoRecolte && nrj >= palierUpAutoRecolte && argent >= palierUpAutoRecolte ){
     		// mise à jour des ressouces
-    		argent -= palierUpAutoRecolte;
     		minerai -= palierUpAutoRecolte;
     		nrj -= palierUpAutoRecolte;
     		actualiseStock();
@@ -382,11 +536,61 @@ $(document).ready(function(){
     		nrj-=coutNrj;
     		argent-=coutArgent;
     		actualiseStock();
-    		actualiseDefense();
+    		actualiseFlotte();
     	}
     });
+    			/******************* UP TAUX CONSTRUCTION VAISSEAU ********************/
+    // bouton upgrade récolte auto
+    $('#boutonUpFlotte').click(function(){
+    	fermerTout();
+    	// recadre le block par rapport à la taille écran
+    	var height= $('#popTopMenu2').height();
+    	$('#popTopMenu2').css({'top':(windowHeight-height-55)+'px','left':(windowWidth/2-160)+'px'});
+
+    	// change l'image si le UP est disponible
+    	if ( minerai >= palierUpTauxConstruction && nrj >= palierUpTauxConstruction ){
+    		$('#imgUpTauxConstructionDefense').attr({'src':'img/uprecolte.gif'});
+    	} else {
+    		$('#imgUpTauxConstructionDefense').attr({'src':'img/uprecolteinactif.png'});
+    	}
+
+    	//Mets à jour le taux d'auto recolte
+    	$('#tauxConstructionDefense').html(tauxConstruction);
+
+    	// mets à jour les cout
+    	$('#coutMineraiUpTauxConstructionDefense').html(palierUpTauxConstruction);
+    	$('#coutNrjUpTauxConstructionDefense').html(palierUpTauxConstruction);
+
+    	// affiche ou cache le block
+    	if( $('#popTopMenu2').css('display') == 'none'){
+    		$('#popTopMenu2').fadeIn(250);
+    	} else {
+    		$('#popTopMenu2').fadeOut(250);
+    	}
+    });
+    $('#imgUpTauxConstructionDefense').click(function(){
+    	if ( minerai >= palierUpAutoRecolte && nrj >= palierUpAutoRecolte && argent >=palierUpAutoRecolte ){
+    		// mise à jour des ressouces
+    		argent -= palierUpAutoRecolte;
+    		minerai -= palierUpAutoRecolte;
+    		nrj -= palierUpAutoRecolte;
+    		actualiseStock();
+    		// mise à jour du palier
+    		palierUpAutoRecolte=(tauxConstruction+4)*(tauxConstruction+4);
+    		// mise à jour du taux
+    		tauxConstruction+=1;
+    		// ferme la fenêtre ( nécessaire pour actualiser les données, système à revoir )
+    		$('#popTopMenu2').fadeOut(250);
+    	}
+    });
+    			/******************* BOUTON ATTAQUE ENNEMIE ********************/
+    $('#boutonAttaque').click(function(){
+    	combattre();
+    });	
     /***************************** INTERVAL *********************************/
-    var autoRecolteInterval = setInterval(autoRecolte,5000);
+    autoRecolteInterval = setInterval(autoRecolte,5000);
+    ennemyIncoming = setInterval(addVaisseauAttaque,1000);
+    ennemyAttaque = setInterval(pertePdv,5000);
     /***************************** EVENEMENT *********************************/
     // curseur sur les objets
     document.getElementById('canvas').addEventListener('mousemove',function(e){posMouseX=e.pageX;posMouseY=e.pageY;},false);

@@ -158,10 +158,14 @@ div.menu li{
 }
 #boutonFlotte{background-position: 0px -250px;}
 #boutonFlotte:hover{background-position: 0px -300px;}
+#boutonUpFlotte{background-position: -150px -250px;}
+#boutonUpFlotte:hover{background-position: -150px -300px;}
 #boutonStation{background-position: -50px -250px;}
 #boutonStation:hover{background-position: -50px -300px;}
-#boutonSonde{background-position: -100px -250px;}
-#boutonSonde:hover{background-position: -100px -300px;}
+#boutonAttaque{background-position: -100px -250px;}
+#boutonAttaque:hover{background-position: -100px -300px;}
+#boutonAide{background-position: -200px -250px;}
+#boutonAide:hover{background-position: -200px -300px;}
 .clear{
 	clear: both;
 }
@@ -385,7 +389,7 @@ div.flottedefense,div.flotteennemie{
 	position: absolute;
 	top: -35px;
 	left: -50px;
-	z-index: -2;
+	z-index: -5;
 }
 div.flottedefense{
 	background-image: url('../img/flottedefense.png');
@@ -401,7 +405,47 @@ div.flotteennemie{
 	position: absolute;
 	left: 41px;
 	top:60px;
-	z-index: -1;
+	z-index: -4;
 	text-align: center;
 }
-
+/************************************* PDV STATION *************************************/
+div.pdvStation,div.nbrPdvStation{
+	border:1px solid black;
+	width: 100px;
+	height: 10px;
+	background-color: #0EC300;
+	position: absolute;
+	z-index: -3;
+	font-size: 10px;
+	text-align: center;
+}
+div.nbrPdvStation{
+	background-color: none;
+	z-index: -2;
+}
+/************************************* FIN DU JEU *************************************/
+div.affFinDeGameMechant img{
+	float: left;
+	margin-right: 5px;
+}
+div.affFinDeGameGentil img{
+	float: right;
+	margin-left: 5px;
+}
+div.affFinDeGameMechant img,div.affFinDeGameGentil img{
+	text-align: justify;
+}
+div.affFinDeGameMechant p,div.affFinDeGameGentil p{
+	padding: 5px;
+}
+div.affFinDeGameMechant,div.affFinDeGameGentil{
+	position: absolute;
+	z-index: 5;
+	width: 500px;
+	height: 150px;
+	overflow: hidden;
+	left: 5px;
+	top: 0px;
+	border:2px solid black;
+	background-image: url('../img/stream.png');
+}

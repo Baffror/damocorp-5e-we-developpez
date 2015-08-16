@@ -441,11 +441,28 @@ div.affFinDeGameMechant p,div.affFinDeGameGentil p{
 div.affFinDeGameMechant,div.affFinDeGameGentil{
 	position: absolute;
 	z-index: 5;
-	width: 500px;
+	width: 450px;
 	height: 150px;
 	overflow: hidden;
 	left: 5px;
 	top: 0px;
 	border:2px solid black;
 	background-image: url('../img/stream.png');
+}
+/************************************* TABLEAU *************************************/
+table{
+	width: 100%;
+	border: 1px solid #404040;
+	margin-top: 10px;
+}
+th,td{
+	text-align: center;
+	padding: 5px;
+	vertical-align: middle;
+}
+tr:nth-child(odd){ 
+	background-color: #505050; 
+}
+tr:nth-child(even){ 
+	background-color: #404040; 
 }

@@ -32,7 +32,16 @@ var autoRecolteInterval,ennemyIncoming,ennemyAttaque // Interval
 var textMachineAEcrire=''				  // Pour l'effet machine à écrire.
 var currentChar = 1;				  	  // Pour l'effet machine à écrire.
 var htmltag = false;				  	  // Pour l'effet machine à écrire.
-var cible = '';				  	  // Pour l'effet machine à écrire.
+var cible = '';				  	  		  // Pour l'effet machine à écrire.
+var nbrClick=0;							  // stats du jeu
+var nbrVaisseauConstruit=0;				  // stats du jeu
+var nbrVaisseauDetruit=0;				  // stats du jeu
+var nbrVaisseauPerdu=0;				      // stats du jeu
+var recolteManuelMinerai=0;				  // stats du jeu
+var recolteManuelNrj=0;				      // stats du jeu
+var recolteManuelArgent=0;				  // stats du jeu
+var recolteAuto=0;				          // stats du jeu
+var score=0;							  // stats du jeu
 /*************************************** FONCTION ******************************************/
 function loop(){
 
@@ -132,10 +141,16 @@ function interactClick(){
         // ajoute la récolte et actualise l'affichage
         if( asteroide[keyClickObject].srcX === 150 ){
         	minerai += tauxRecolte;
+        	// stat recolte manuel
+        	recolteManuelMinerai += tauxRecolte;
         } else if( asteroide[keyClickObject].srcX === 200 ){
         	nrj += tauxRecolte;
+        	// stat recolte manuel
+        	recolteManuelNrj += tauxRecolte;
         } else {
         	argent += tauxRecolte;
+        	// stat recolte manuel
+        	recolteManuelArgent += tauxRecolte;
         }
         actualiseStock();
     }
@@ -165,6 +180,8 @@ function autoRecolte(){
 		nrj+=tauxAutoRecolte;
 		argent+=tauxAutoRecolte;
 		actualiseStock();
+		// stats auto recolte
+		recolteAuto+=tauxAutoRecolte;
 	}
 }
 function fermerTout(){
@@ -220,7 +237,14 @@ function combattre(){
 		var perte = Math.random()*100;
 		if ( perte > 60 ){ perte=60; } else if ( perte < 20 ) { perte =20; }
 
-		nbrVaisseauDefense -= Math.floor(nbrVaisseauDefense*perte/100);
+		var perteDefense = Math.floor(nbrVaisseauDefense*perte/100);
+		// perte défenseur
+		nbrVaisseauDefense -= perteDefense;
+		// stats perte vaisseau
+		nbrVaisseauPerdu += perteDefense;
+		// stat vaisseau détruit
+		nbrVaisseauDetruit += nbrVaisseauAttaque;
+		// perte ennemie = 100%
 		nbrVaisseauAttaque = 0;
 
 		//actualise l'affichage
@@ -232,8 +256,16 @@ function combattre(){
 		var perte = Math.random()*100;
 		if ( perte > 80 ){ perte=80; } else if ( perte < 40 ) { perte =40; }
 
+		// stats perte vaisseau
+		nbrVaisseauPerdu += nbrVaisseauDefense;
+		// perte de tous les vaisseau en défense
 		nbrVaisseauDefense = 0;
-		nbrVaisseauAttaque -= Math.floor(nbrVaisseauAttaque*perte/100);
+
+		var perteEnnemie = Math.floor(nbrVaisseauAttaque*perte/100);
+		// stat vaisseau détruit
+		nbrVaisseauDetruit += perteEnnemie;
+		// perte ennemie
+		nbrVaisseauAttaque -= perteEnnemie;
 
 		//actualise l'affichage
 		actualiseFlotte();
@@ -295,11 +327,35 @@ function finDuJeu(){
 			htmltag = false;
 			cible='textGentil';
 			// cree l'animation + effet machie à ecrire
-			$('#affFinDeGameGentil').animate({'left':'-=505'},300,function(){
+			$('#affFinDeGameGentil').animate({'left':'-=455'},300,function(){
+				// texte commandant
 				machine('textGentil');
-				setTimeout(function(){
-					$('#textGentil').html($('#textGentil').html()+'<input id="envoyeScore" type="submit" value="Affimartif" /> <input id="pasEnvoyeScore" type="submit" value="Négatif" />');
-				},10000);
+
+				// rempli la fenêtre de score et stats
+				var diff = Math.round(+new Date()/1000)-countTime;
+				var heure = Math.floor(diff/3600);
+				diff = diff%3600;
+				var minute = Math.floor(diff/60);
+				diff = diff%3600;
+
+				$('#statDuree').html(heure+'H '+minute+'m '+diff+'s');
+				$('#nbrClick').html(number_format(nbrClick,'','',' '));
+				$('#statVaisseauConstruit').html(number_format(nbrVaisseauConstruit,'','',' '));
+				$('#statVaisseauDetruit').html(number_format(nbrVaisseauDetruit,'','',' '));
+				$('#statVaisseauPerdu').html(number_format(nbrVaisseauPerdu,'','',' '));
+				$('#statRecolteMinerai').html(number_format(recolteManuelMinerai,'','',' '));
+				$('#statRecolteNrj').html(number_format(recolteManuelNrj,'','',' '));
+				$('#statRecolteArgent').html(number_format(recolteManuelArgent,'','',' '));
+				$('#statRecolteAuto').html(number_format(recolteAuto,'','',' '));
+
+				score = nbrClick+nbrVaisseauConstruit*2+nbrVaisseauDetruit*10-nbrVaisseauPerdu*3+recolteManuelMinerai*5+recolteManuelMinerai*3+recolteManuelNrj*3+recolteManuelArgent*4+Math.round(recolteAuto/10);
+
+				$('#statScreoFinal').html(number_format(score,'','',' '));
+
+				// prepare et affiche la fenetre de Score et Stats
+				var height= $('#popTopMenuStat').height();
+				$('#popTopMenuStat').css({'top':(windowHeight-height-55)+'px','left':(windowWidth/2-160)+'px'});
+				$('#popTopMenuStat').fadeIn(100);
 			});
 
 		},10000)
@@ -308,9 +364,8 @@ function finDuJeu(){
 }
 function machine(){
 	var str = textMachineAEcrire.substr(0, currentChar);
-	
 	var last = str.substr(str.length -1, str.length);
-	if(last != '<' && last != '>' & last != '/') {
+	if(last != '<' && last != '>' && last != '/') {
 	    $('#'+cible).html(str);
 	}
 	currentChar++;
@@ -457,6 +512,7 @@ $(document).ready(function(){
     // message de fin de l'ennemi
     $('#affFinDeGameMechant').css({'top':(windowHeight/2-75)+'px','left':'-505px'});
     $('#affFinDeGameGentil').css({'top':(windowHeight/2-75)+'px','left':(windowWidth)+'px'});
+
     /***************************** PREPARATION OBJET AFFICHAGE *********************************/
     // ajout de X astéroide
     for (var i=0; i<10; i++) {
@@ -477,6 +533,8 @@ $(document).ready(function(){
     loop();
 
     /***************************** Click action ******************************/
+    // stat click
+    $('body').click(function(){nbrClick++});
     // si on lic sur le canvas, on désaffiche toute fenêtre potentiellement ouverte
     $('#canvas').click(function(){
     	fermerTout();
@@ -551,6 +609,8 @@ $(document).ready(function(){
     	var coutArgent = tauxConstruction*9;
     	if ( coutMinerai <= minerai && coutNrj <= nrj && coutArgent <= argent ){
     		nbrVaisseauDefense+=tauxConstruction;
+    		// stat vaisseau construit
+    		nbrVaisseauConstruit+=tauxConstruction;
     		minerai-=coutMinerai;
     		nrj-=coutNrj;
     		argent-=coutArgent;
@@ -606,6 +666,38 @@ $(document).ready(function(){
     $('#boutonAttaque').click(function(){
     	combattre();
     });	
+    			/******************* ENVOYE DU SCORE ********************/
+    $('#envoyeScore').click(function(){
+    	var nom = prompt('Entrez votre nom ( 30 caractères alphanumérique max )');
+    	var diff = Math.round(+new Date()/1000)-countTime;
+    	$.post('php/ajax/recupscore.php',
+    			{"nom":nom,
+    			"duree":diff,
+    			"nbrClick":nbrClick,
+    			"nbrVaisseauConstruit":nbrVaisseauConstruit,
+    			"nbrVaisseauDetruit":nbrVaisseauDetruit,
+    			"nbrVaisseauPerdu":nbrVaisseauPerdu,
+    			"recolteManuelMinerai":recolteManuelMinerai,
+    			"recolteManuelNrj":recolteManuelNrj,
+    			"recolteManuelArgent":recolteManuelArgent,
+    			"recolteAuto":recolteAuto,
+    			"score":score},
+    			function(retour){
+    				if(retour.ok!=undefined){
+	    				// récupération du texte
+	    				textMachineAEcrire = 'Informations envoyées commandant.Ce fût un honneur de vous servir.';
+	    				$('#textGentil').html('');
+	    				// reinitisalise les variable
+	    				currentChar = 1;
+	    				htmltag = false;
+	    				cible='textGentil';
+	    				machine();
+	    			} else {
+	    				affmess(retour.erreur,1);
+	    			}
+    			}
+    		  );
+    });
     /***************************** INTERVAL *********************************/
     autoRecolteInterval = setInterval(autoRecolte,5000);
     ennemyIncoming = setInterval(addVaisseauAttaque,1000);

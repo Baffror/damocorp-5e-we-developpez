@@ -13,3 +13,8 @@ Sound damocorp : under Copyright. You can't use without permission. Thanks Antyo
 <h3>***** COMPATIBILITY *****</h3>
 
 Tested on Chrome and Firefox.
+
+<h3>***** ONLINE VERSION  *****</h3>
+
+http://www.damocorp.com/damocorp-5e-we-developpez/
+

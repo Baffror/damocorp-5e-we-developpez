@@ -1,11 +1,3 @@
-/*************************************** FONCTION *********************************************/
-function affRetour(mess,laclass){
-	if ( $('#reponse').length === 1 ){ $('#reponse').remove(); }
-	if ( laclass === undefined ){ var laclass = 'good'; } else { var laclass = 'bad'; }
-	$('body').prepend('<div id="reponse" class="'+laclass+'">'+mess+'</div>');
-	$("#reponse").css('top', $(window).scrollTop() + 'px');
-	setTimeout(function(){$('#reponse').fadeOut(2000,function(){$('#reponse').remove();});},4000);
-}
 /*************************************** VARIABLE *********************************************/
 var elem,ctx = false;                     // le canvas
 var windowHeight = window.innerHeight;    // hauteur fenetre
@@ -93,13 +85,6 @@ function number_format(number, decimals, dec_point, thousands_sep) {
         s[1] += new Array(prec - s[1].length + 1).join('0');
     }
     return s.join(dec);
-}
-function affRetour(mess,laclass){
-    if ( $('#reponse').length === 1 ){ $('#reponse').remove(); }
-    if ( laclass === undefined ){ var laclass = 'reponseG'; } else { var laclass = 'reponseB'; }
-    $('body').prepend('<div id="reponse" class="'+laclass+'">'+mess+'</div>');
-    $("#reponse").css('top', $(window).scrollTop() + 'px');
-    setTimeout(function(){$('#reponse').fadeOut(2000,function(){$('#reponse').remove();});},4000);
 }
 function genereAsteroide(){
     var rand = Math.random();
@@ -790,7 +775,7 @@ $(document).ready(function(){
 			$('#fleche_haut').css({'top':'80px','left':(windowWidth/2-8)+'px'});
 			$('#fleche_haut').fadeIn(250);
 		});
-		textMachineAEcrire="Cliquez sur des astéroides doré et vous pourrez upgrader votre vitesse de récolte au clic lorsque nous aurons assez de ressource. Vert => nous avons assez de ressource<br /> <input id=\"etape3\" type=\"submit\" value=\"Suivant\" /> <input id=\"closeTuto\" type=\"submit\" value=\"Fermer\" /> ";
+		textMachineAEcrire="Cliquez sur des astéroides dorés et vous pourrez upgrader votre vitesse de récolte au clic lorsque nous aurons assez de ressource. Vert => nous avons assez de ressource<br /> <input id=\"etape3\" type=\"submit\" value=\"Suivant\" /> <input id=\"closeTuto\" type=\"submit\" value=\"Fermer\" /> ";
 		$('#textGentil').html('');
 		// reinitisalise les variable
 		currentChar = 1;
@@ -804,7 +789,7 @@ $(document).ready(function(){
 			$('#fleche_bas').css({'top':(windowHeight-40-150)+'px','left':(windowWidth/2-115)+'px'});
 			$('#fleche_bas').fadeIn(250);
 		});
-		textMachineAEcrire="Pour se défendre il nous faut des ressources. Upgrader aussi vite que possible le système d'auto-récolte<br /> <input id=\"etape4\" type=\"submit\" value=\"Suivant\" /> <input id=\"closeTuto\" type=\"submit\" value=\"Fermer\" /> ";
+		textMachineAEcrire="Pour se défendre, il nous faut des ressources. Upgrader aussi vite que possible le système d'auto-récolte<br /> <input id=\"etape4\" type=\"submit\" value=\"Suivant\" /> <input id=\"closeTuto\" type=\"submit\" value=\"Fermer\" /> ";
 		$('#textGentil').html('');
 		// reinitisalise les variable
 		currentChar = 1;
@@ -818,7 +803,7 @@ $(document).ready(function(){
 			$('#fleche_bas').css({'top':(windowHeight-40-150)+'px','left':(windowWidth/2-215)+'px'});
 			$('#fleche_bas').fadeIn(250);
 		});
-		textMachineAEcrire="Cliquez sur ce bouton pour construire des chasseurs en défense. Le cout vaut respectivement 50 / 29 / 9. Gardez un oeil sur les ressources.<br /> <input id=\"etape5\" type=\"submit\" value=\"Suivant\" /> <input id=\"closeTuto\" type=\"submit\" value=\"Fermer\" /> ";
+		textMachineAEcrire="Cliquez sur ce bouton pour construire des chasseurs en défense. Le coût vaut respectivement 50 / 29 / 9. Gardez un oeil sur les ressources.<br /> <input id=\"etape5\" type=\"submit\" value=\"Suivant\" /> <input id=\"closeTuto\" type=\"submit\" value=\"Fermer\" /> ";
 		$('#textGentil').html('');
 		// reinitisalise les variable
 		currentChar = 1;
@@ -832,7 +817,7 @@ $(document).ready(function(){
 			$('#fleche_bas').css({'top':(windowHeight-40-150)+'px','left':(windowWidth/2-165)+'px'});
 			$('#fleche_bas').fadeIn(250);
 		});
-		textMachineAEcrire="Nos ennemis ont énormement de renforts. N'hésitez pas à augmenter notre capacité de production si nous avons les ressources. Chaque upgrade permettra de produire +1 vaisseau par clic.<br /> <input id=\"etape6\" type=\"submit\" value=\"Suivant\" /> <input id=\"closeTuto\" type=\"submit\" value=\"Fermer\" /> ";
+		textMachineAEcrire="Nos ennemis ont énormément de renforts. N'hésitez pas à augmenter notre capacité de production si nous avons les ressources. Chaque upgrade permettra de produire +1 vaisseau par clic.<br /> <input id=\"etape6\" type=\"submit\" value=\"Suivant\" /> <input id=\"closeTuto\" type=\"submit\" value=\"Fermer\" /> ";
 		$('#textGentil').html('');
 		// reinitisalise les variable
 		currentChar = 1;
@@ -846,7 +831,7 @@ $(document).ready(function(){
 			$('#fleche_bas').css({'top':(windowHeight-40-150)+'px','left':(windowWidth/2-65)+'px'});
 			$('#fleche_bas').fadeIn(250);
 		});
-		textMachineAEcrire="Lorque vous l'estimerez nécessaire, cliquez sur ce bouton, et nous irons nous battre jusqu'à la mort si nécessaire.<br /> <input id=\"closeTuto\" type=\"submit\" value=\"Fermer\" /> ";
+		textMachineAEcrire="Lorsque vous serez prêt, cliquez sur ce bouton, et nous irons nous battre jusqu'à la mort si nécessaire.<br /> <input id=\"closeTuto\" type=\"submit\" value=\"Fermer\" /> ";
 		$('#textGentil').html('');
 		// reinitisalise les variable
 		currentChar = 1;

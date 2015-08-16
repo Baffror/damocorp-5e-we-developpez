@@ -466,3 +466,7 @@ tr:nth-child(odd){
 tr:nth-child(even){ 
 	background-color: #404040; 
 }
+/************************************* TABLEAU *************************************/
+a:link {color: #639cfc ; text-decoration: none ;}
+a:visited {color: #639cfc; }
+a:hover { color: #639cfc ; text-decoration: underline ; }  

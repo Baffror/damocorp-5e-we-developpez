@@ -685,7 +685,7 @@ $(document).ready(function(){
     			function(retour){
     				if(retour.ok!=undefined){
 	    				// récupération du texte
-	    				textMachineAEcrire = 'Informations envoyées commandant.Ce fût un honneur de vous servir.';
+	    				textMachineAEcrire = 'Informations envoyées commandant.Ce fût un honneur de vous servir.<a href="classement.php">Classement</a> ';
 	    				$('#textGentil').html('');
 	    				// reinitisalise les variable
 	    				currentChar = 1;

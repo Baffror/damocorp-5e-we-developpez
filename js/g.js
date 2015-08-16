@@ -192,10 +192,20 @@ function addVaisseauAttaque(){
 	}
 
 }
-function explosion(id,top,left){
-	$('body').append('<img id="explosion'+id+'" src="img/explosion.gif" style="display:none;position:absolute;z-index:-1;width:36px;height:50px;" src="explosion.gif width="36" height="50" />');
+function explosion(id,top,left,repeat){
+	if (repeat!=undefined){
+		var zIndex = 500;
+	} else {
+		var zIndex = -1;
+	}
+	$('body').append('<img id="explosion'+id+'" src="img/explosion.gif" style="display:none;position:absolute;z-index:'+zIndex+';width:36px;height:50px;" src="explosion.gif width="36" height="50" />');
 	$('#explosion'+id).css({'top':top+'px','left':left+'px'});
-	$('#explosion'+id).fadeIn(1000,function(){$('#explosion'+id).fadeOut(1000);})
+	if (repeat!=undefined){
+		$('#explosion'+id).fadeIn(1000)
+	} else {
+		$('#explosion'+id).fadeIn(1000,function(){$('#explosion'+id).fadeOut(1000);})
+	}
+	
 }
 function combattre(){
 
@@ -255,6 +265,15 @@ function finDuJeu(){
 	clearInterval(autoRecolteInterval);
 	clearInterval(ennemyIncoming);
 	clearInterval(ennemyAttaque);
+
+	// ajout des explosions sur la station
+	explosion('dskfsdf',windowHeight/2-50,windowWidth/2-50,true);
+	explosion('dskfsdf2',windowHeight/2-50,windowWidth/2+10,true);
+	explosion('dskfsdf3',windowHeight/2+10,windowWidth/2+25,true);
+	explosion('dskfsdf4',windowHeight/2+10,windowWidth/2-25,true);
+
+	// on ferme l'interface si ouverte
+	fermerTout();
 
 	// récupération du texte
 	textMachineAEcrire = $('#textMechant').html();

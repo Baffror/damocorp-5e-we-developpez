@@ -258,10 +258,14 @@ function combattre(){
 	explosion(id+'B',45,windowWidth-85);
 
 	// lance le son
-	playSound('ennemi');
-
+	
+	if( nbrVaisseauDefense == 0 ){
+		affErreur("Hey commandant, nos pilotes se mettent en grève ! Cause : pas assez de chasseurs.")
 	// si la flotte en défense est supérieur à l'attaque = 20-60/100
-	if ( nbrVaisseauDefense >= nbrVaisseauAttaque ){
+	} else if ( nbrVaisseauDefense >= nbrVaisseauAttaque ){
+		// son
+		playSound('ennemi');
+
 		// % de perte
 		var perte = Math.random()*100;
 		if ( perte > 60 ){ perte=60; } else if ( perte < 20 ) { perte =20; }
@@ -343,6 +347,7 @@ function finDuJeu(){
 	fermerTout();
 	$('#tutoriel').animate({'left':'+=505'},300);
 	$('#armurierTutoriel').animate({'left':'+=505'},300);
+	$('#messageErreur').animate({'left':'+=455'},300);
 
 	// récupération du texte
 	textMachineAEcrire = $('#textMechant').html();
@@ -417,6 +422,14 @@ function machine(){
 	    } else {
 	        setTimeout(machine, 50);
 	    }
+	}
+}
+function affErreur(text){
+	console.log(parseInt($('#messageErreur').css('left'))+' > '+windowWidth)
+	if ( parseInt($('#messageErreur').css('left')) >= windowWidth ){
+		var addText="<input id=\"closeErreur\" type=\"submit\" value=\"Fermer\" /> ";
+		$('#textmessageErreur').html(text+addText);
+		$('#messageErreur').animate({'left':'-=455'},300);
 	}
 }
 /************************************* OBJET ******************************************/
@@ -552,6 +565,8 @@ $(document).ready(function(){
     // tutoriel
     $('#tutoriel').css({'top':(windowHeight/2-75)+'px','left':(windowWidth-455)+'px'});
     $('#armurierTutoriel').css({'top':(windowHeight/2-75+160)+'px','left':(windowWidth)+'px'});
+    // message d'erreur
+    $('#messageErreur').css({'top':(windowHeight/2-75-160)+'px','left':(windowWidth)+'px'});
 
     /***************************** PREPARATION OBJET AFFICHAGE *********************************/
     // ajout de X astéroide
@@ -578,6 +593,17 @@ $(document).ready(function(){
     // si on lic sur le canvas, on désaffiche toute fenêtre potentiellement ouverte
     $('#canvas').click(function(){
     	fermerTout();
+    });
+    // fermer les message d'erreur
+    $('body').on('click','#closeErreur',function(){
+    	$('#messageErreur').animate({'left':'+=455'},300);
+    });
+    // autdestruction
+    $('#boutonAutoDestruction').click(function(){
+    	affErreur("T'es sérieux la ? On bat en retraite et on lance l'auto-destruction ? <br /> <input id=\"confirmBoutonAutoDestruction\" type=\"submit\" value=\"Auto-destruction\" /> ");
+    });
+    $('body').on('click','#confirmBoutonAutoDestruction',function(){
+    	endGame=true;
     });
     			/******************* UP TAUX RECOLTE ********************/
     // Upgrader le taux de récolte
@@ -656,6 +682,8 @@ $(document).ready(function(){
     		argent-=coutArgent;
     		actualiseStock();
     		actualiseFlotte();
+    	} else {
+    		affErreur("Nous n'avons pas assez de ressource commandant. Il nous faudrait "+coutMinerai+" / "+coutNrj+" / "+coutArgent);
     	}
     });
     			/******************* UP TAUX CONSTRUCTION VAISSEAU ********************/
@@ -827,7 +855,7 @@ $(document).ready(function(){
 		machine();
 		setTimeout(function(){
 			$('#armurierTutoriel').animate({'left':'-=455'},300);
-			textMachineAEcrire=$('#textTutoArmurier').html();
+			textMachineAEcrire="Parle pour toi mauviette ! Moi je compte bien leur foutre une dérouillée et m'en sortir comme toujours. <br /> <input id=\"closeTuto\" type=\"submit\" value=\"Fermer\" /> ";
 			$('#textTutoArmurier').html('');
 			// reinitisalise les variable
 			currentChar = 1;

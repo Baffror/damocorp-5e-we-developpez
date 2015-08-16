@@ -164,8 +164,8 @@ div.menu li{
 #boutonStation:hover{background-position: -50px -300px;}
 #boutonAttaque{background-position: -100px -250px;}
 #boutonAttaque:hover{background-position: -100px -300px;}
-#boutonAide{background-position: -200px -250px;}
-#boutonAide:hover{background-position: -200px -300px;}
+#boutonAutoDestruction{background-position: -200px -250px;}
+#boutonAutoDestruction:hover{background-position: -200px -300px;}
 .clear{
 	clear: both;
 }

@@ -6,3 +6,5 @@
 
 Code : Free use and no copyright<br />
 Image : All image are under Copyright. You can't use without permission. Thanks.
+Sound : Source http://www.universal-soundbank.com/explosions.htm
+Sound damocorp : under Copyright. You can't use without permission. Thanks.

@@ -410,7 +410,6 @@ function machine(){
 	}
 }
 function affErreur(text){
-	console.log(parseInt($('#messageErreur').css('left'))+' > '+windowWidth)
 	if ( parseInt($('#messageErreur').css('left')) >= windowWidth ){
 		var addText="<input id=\"closeErreur\" type=\"submit\" value=\"Fermer\" /> ";
 		$('#textmessageErreur').html(text+addText);

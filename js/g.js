@@ -374,7 +374,7 @@ function finDuJeu(){
 				var heure = Math.floor(diff/3600);
 				diff = diff%3600;
 				var minute = Math.floor(diff/60);
-				diff = diff%3600;
+				diff = diff%60;
 
 				$('#statDuree').html(heure+'H '+minute+'m '+diff+'s');
 				$('#nbrClick').html(number_format(nbrClick,'','',' '));

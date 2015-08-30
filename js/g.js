@@ -192,7 +192,7 @@ function addVaisseauAttaque(){
 	var diff = Math.round(+new Date()/1000)-countTime;
 	// ajoute le nombre de vaisseau
 	var nbr = Math.floor(Math.random()*diff/30)
-
+	
 	if (nbr>0){
 		nbrVaisseauAttaque+=nbr;
 		// mets à jours l'affichage
@@ -215,7 +215,7 @@ function playSound(qui){
 			timerAntiSaoul=Math.round(+new Date()/1000);
 		}
 	} else {
-		attaqueEnnemie.setAttribute('src','son/laser'+rand+'.mp3');
+		soundAttaqueEnnemie.setAttribute('src','son/laser'+rand+'.mp3');
 		soundAttaqueEnnemie.play();
 		soundAttaqueEnnemie.volume = 1;
 	}
@@ -273,14 +273,16 @@ function combattre(){
 
 	// si la flotte en défense est inférieur à l'attaque = 100/40-80
 	} else if ( nbrVaisseauDefense < nbrVaisseauAttaque && nbrVaisseauDefense>0 ){
+		// son
+		playSound('ennemi');
+
 		// % de perte
 		var perte = Math.random()*100;
 		if ( perte > 80 ){ perte=80; } else if ( perte < 40 ) { perte =40; }
 
 		// stats perte vaisseau
 		nbrVaisseauPerdu += nbrVaisseauDefense;
-		// perte de tous les vaisseau en défense
-		nbrVaisseauDefense = 0;
+
 
 		var perteEnnemie = Math.floor(nbrVaisseauAttaque*perte/100);
 		// Securité anti perte abusive
@@ -289,6 +291,9 @@ function combattre(){
 		nbrVaisseauDetruit += perteEnnemie;
 		// perte ennemie
 		nbrVaisseauAttaque -= perteEnnemie;
+
+		// perte de tous les vaisseau en défense
+		nbrVaisseauDefense = 0;
 
 		//actualise l'affichage
 		actualiseFlotte();
